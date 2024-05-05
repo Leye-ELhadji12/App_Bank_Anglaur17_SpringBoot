@@ -1,0 +1,55 @@
+<div class="container mt-2">
+  <div class="card">
+    <div class="card-header"><h5>Liste des Clients</h5></div>
+    <div class="card-body">
+<!--      {{ this.searchForm.value | json }}-->
+      <form class="d-flex mb-1" [formGroup]="searchForm" (ngSubmit)="searchCustomers()">
+        <div class="input-group">
+          <label class="input-group-text">mot clé</label>
+          <input type="text" formControlName="searchField" class="form">
+          @if (searchForm.controls['searchField'].invalid && searchForm.controls['searchField'].touched
+            || searchForm.controls['searchField'].dirty){
+            @if (searchForm.controls['searchField'].errors?.['required']){
+              <div class="text-bg-danger p-1">This is required before searching</div>
+            }
+          }
+          <div class="text-bg-danger"></div>
+<!--          <p>Value: {{ searchForm.value }}</p>-->
+<!--          <p>Validation status: {{ searchForm.status }}</p>-->
+          <button class="btn" (click)="toggleValidation()" ><i class="bi bi-search"></i></button>
+        </div>
+      </form>
+      @if (customers$().length) {
+        <table class="table table-borderless">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nom</th>
+              <th>Email</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          @if (customers$().length) {
+            <tbody>
+              @for (customer$ of customers$(); track customer$.name){
+                <tr>
+                  <td>{{ customer$.id }}</td>
+                  <td>{{ customer$.name }}</td>
+                  <td>{{ customer$.email }}</td>
+                  <td>
+                    <button (click)="selectedCustomer(customer$)" class="btn eye me-2"><i class="bi bi-eye"></i></button>
+                    <button (click)="deleteCustomer(customer$)" class="btn trash"><i class="bi bi-trash2"></i></button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          }
+        </table>
+      } @else {
+        <div class="card border-2 text-center p-4">
+          <h4>La liste des clients est vide.</h4>
+        </div>
+      }
+    </div>
+  </div>
+</div>
